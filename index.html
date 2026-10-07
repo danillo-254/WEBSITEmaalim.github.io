@@ -1,0 +1,932 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Maalim's Resource and Study Platform</title>
+    <style>
+        :root {
+            --primary: #2c3e50;
+            --accent: #3498db;
+            --bg: #f4f6f9;
+            --white: #ffffff;
+            --danger: #e74c3c;
+            --success: #27ae60;
+            --whatsapp: #25D366;
+            --warning: #f39c12;
+        }
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: var(--bg);
+            color: #333;
+        }
+        header {
+            background-color: var(--primary);
+            color: var(--white);
+            padding: 20px;
+            text-align: center;
+        }
+        .container {
+            max-width: 900px;
+            margin: 20px auto;
+            background: var(--white);
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+        .nav-buttons {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            background: #eef2f7;
+            padding: 10px;
+            border-radius: 6px;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+        button {
+            background-color: var(--accent);
+            color: var(--white);
+            border: none;
+            padding: 10px 15px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-weight: bold;
+        }
+        button:hover {
+            opacity: 0.9;
+        }
+        button.danger {
+            background-color: var(--danger);
+        }
+        button.success {
+            background-color: var(--success);
+        }
+        button.warning {
+            background-color: var(--warning);
+        }
+        .whatsapp-btn {
+            background-color: var(--whatsapp);
+            color: white;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            text-decoration: none;
+            padding: 10px 18px;
+            border-radius: 5px;
+            font-weight: bold;
+            margin-top: 10px;
+        }
+        .whatsapp-btn:hover {
+            opacity: 0.9;
+        }
+        .panel {
+            display: none;
+        }
+        .panel.active {
+            display: block;
+        }
+        input, select, textarea {
+            width: 100%;
+            padding: 8px;
+            margin: 8px 0 15px 0;
+            box-sizing: border-box;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+        .password-container {
+            position: relative;
+        }
+        .password-container input {
+            padding-right: 40px;
+        }
+        .toggle-password {
+            position: absolute;
+            right: 10px;
+            top: 35%;
+            transform: translateY(-50%);
+            cursor: pointer;
+            font-size: 14px;
+            color: #666;
+            background: none;
+            border: none;
+            padding: 0;
+            font-weight: normal;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 15px;
+        }
+        th, td {
+            border: 1px solid #ddd;
+            padding: 10px;
+            text-align: left;
+        }
+        th {
+            background-color: #f2f2f2;
+        }
+        .contact-box {
+            background: #e8f4f8;
+            padding: 15px;
+            border-radius: 5px;
+            margin-top: 25px;
+            border-left: 4px solid var(--accent);
+        }
+        .auth-card {
+            background: #fafafa;
+            padding: 20px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            margin-bottom: 20px;
+        }
+        .quiz-card, .game-card {
+            background: #fafafa;
+            padding: 20px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            margin-bottom: 20px;
+        }
+        .option-btn {
+            display: block;
+            width: 100%;
+            text-align: left;
+            background: #fff;
+            color: #333;
+            border: 1px solid #cbd5e1;
+            margin: 8px 0;
+            padding: 12px;
+            border-radius: 6px;
+            font-weight: normal;
+            transition: background 0.2s;
+        }
+        .option-btn:hover {
+            background: #e2e8f0;
+            opacity: 1;
+        }
+        .option-btn.correct {
+            background: var(--success) !important;
+            color: white;
+            border-color: var(--success);
+        }
+        .option-btn.incorrect {
+            background: var(--danger) !important;
+            color: white;
+            border-color: var(--danger);
+        }
+        /* Modal Viewer Styling */
+        #mediaModal {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.7);
+            align-items: center;
+            justify-content: center;
+        }
+        .modal-content {
+            background: var(--white);
+            padding: 20px;
+            border-radius: 8px;
+            max-width: 750px;
+            width: 90%;
+            position: relative;
+            max-height: 85vh;
+            overflow-y: auto;
+            text-align: center;
+        }
+        .modal-content img, .modal-content video {
+            max-width: 100%;
+            max-height: 55vh;
+            border-radius: 4px;
+            margin-top: 10px;
+        }
+    </style>
+
+    <!-- Firebase SDKs -->
+    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-storage-compat.js"></script>
+</head>
+<body>
+
+    <header>
+        <h1>Welcome to Maalim's Resource and Study Platform</h1>
+        <p>Access notes, links, videos, interactive quizzes, and educational games securely from the cloud.</p>
+    </header>
+
+    <div class="container">
+        <!-- Top Status Bar -->
+        <div class="nav-buttons">
+            <span id="currentUserDisplay" style="font-weight: bold; color: var(--primary);">Status: Not Logged In</span>
+            <div style="display: flex; gap: 5px; flex-wrap: wrap;">
+                <button id="navUserBtn" onclick="switchPanel('userPanel')" style="display:none;">Dashboard</button>
+                <button id="navQuizBtn" onclick="switchPanel('quizPanel')" style="display:none;">Quizzes</button>
+                <button id="navGameBtn" onclick="switchPanel('gamePanel')" style="display:none;">Games</button>
+                <button id="navAdminBtn" onclick="switchPanel('adminPanel')" style="display:none;">Admin Dashboard</button>
+                <button class="danger" id="logoutBtn" onclick="logout()" style="display:none;">Log Out</button>
+            </div>
+        </div>
+
+        <!-- AUTH PANEL (Login / Register) -->
+        <div id="authPanel" class="panel active">
+            <h2>Welcome! Please Log In or Create an Account</h2>
+            <div style="display: flex; gap: 20px; flex-wrap: wrap;">
+                
+                <!-- Login Box -->
+                <div class="auth-card" style="flex: 1; min-width: 280px;">
+                    <h3>User / Admin Log In</h3>
+                    <input type="text" id="loginUser" placeholder="Username">
+                    <div class="password-container">
+                        <input type="password" id="loginPass" placeholder="Password">
+                        <button type="button" class="toggle-password" onclick="togglePasswordVisibility('loginPass', this)">👁️</button>
+                    </div>
+                    <button class="success" onclick="login()">Log In</button>
+                </div>
+
+                <!-- Registration Box -->
+                <div class="auth-card" style="flex: 1; min-width: 280px;">
+                    <h3>Create End User Account</h3>
+                    <input type="text" id="regUser" placeholder="Choose Username">
+                    <div class="password-container">
+                        <input type="password" id="regPass" placeholder="Choose Password">
+                        <button type="button" class="toggle-password" onclick="togglePasswordVisibility('regPass', this)">👁️</button>
+                    </div>
+                    <button onclick="registerUser()">Register Account</button>
+                </div>
+
+            </div>
+        </div>
+
+        <!-- END USER PANEL -->
+        <div id="userPanel" class="panel">
+            <h2>End User Dashboard</h2>
+            <p>Welcome, <span id="welcomeName"></span>! You can open, read, and view all cloud-synced items below. Downloads remain locked until approved by the admin.</p>
+
+            <h3>Available Uploads & Resources</h3>
+            <table id="userFilesTable">
+                <tr>
+                    <th>Title</th>
+                    <th>Type</th>
+                    <th>Uploaded By</th>
+                    <th>Open & Read</th>
+                    <th>Download Status</th>
+                </tr>
+            </table>
+
+            <!-- Contact Info Section with WhatsApp Integration -->
+            <div class="contact-box">
+                <h3>Contact Admin</h3>
+                <p>If you need download permissions or have questions, reach out directly:</p>
+                <p><strong>Email:</strong> danielbandari@gmail.com</p>
+                <p><strong>Tel:</strong> 0113696442</p>
+                
+                <!-- WhatsApp Direct Chat Button -->
+                <a href="https://wa.me/254113696442?text=Hello%20Maalim,%20I%20need%20assistance%20with%20the%20Study%20Platform." target="_blank" class="whatsapp-btn">
+                    <svg width="20" height="20" fill="currentColor" viewBox="0 0 24 24"><path d="M.057 24l1.687-6.163c-1.041-1.804-1.588-3.849-1.587-5.946.003-6.556 5.338-11.891 11.893-11.891 3.181.001 6.167 1.24 8.413 3.488 2.245 2.248 3.481 5.236 3.48 8.414-.003 6.557-5.338 11.892-11.893 11.892-1.99-.001-3.951-.5-5.688-1.448l-6.305 1.654zm6.597-3.807c1.676.995 3.276 1.591 5.392 1.592 5.448 0 9.886-4.434 9.889-9.885.002-5.462-4.415-9.89-9.881-9.892-5.452 0-9.887 4.434-9.889 9.884-.001 2.225.651 3.891 1.746 5.634l-.999 3.648 3.742-.981zm11.387-5.464c-.074-.124-.272-.198-.57-.347-.297-.149-1.758-.868-2.031-.967-.272-.099-.47-.149-.669.149-.198.297-.768.967-.941 1.165-.173.198-.347.223-.644.074-.297-.149-1.255-.462-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.297-.347.446-.521.151-.172.2-.296.3-.495.099-.198.05-.372-.025-.521-.075-.148-.669-1.611-.916-2.206-.242-.579-.487-.501-.669-.51l-.57-.01c-.198 0-.52.074-.792.372s-1.04 1.016-1.04 2.479 1.065 2.876 1.213 3.074c.149.198 2.095 3.2 5.076 4.487.709.306 1.263.489 1.694.626.712.226 1.36.194 1.872.118.571-.085 1.758-.719 2.006-1.413.248-.695.248-1.29.173-1.414z"/></svg>
+                    Chat with Admin on WhatsApp
+                </a>
+            </div>
+        </div>
+
+        <!-- QUIZ PANEL (Math & Computer Studies) -->
+        <div id="quizPanel" class="panel">
+            <h2>🧠 Real-Time Knowledge Quizzes</h2>
+            <p>Test your understanding of Mathematics and Computer Studies with instant feedback and scoring!</p>
+            
+            <div style="margin-bottom: 15px;">
+                <label for="quizCategorySelect"><strong>Select Topic:</strong></label>
+                <select id="quizCategorySelect" onchange="loadQuiz()">
+                    <option value="math">Mathematics (Trigonometry & Algebra)</option>
+                    <option value="computer">Computer Studies (CPU & Architecture)</option>
+                </select>
+            </div>
+
+            <div class="quiz-card">
+                <div style="display: flex; justify-content: space-between; margin-bottom: 15px; font-weight: bold; color: var(--primary);">
+                    <span id="quizProgress">Question 1 of 5</span>
+                    <span id="quizScoreDisplay">Score: 0</span>
+                </div>
+                <h3 id="quizQuestionText">Loading question...</h3>
+                <div id="quizOptionsContainer"></div>
+                <div id="quizFeedback" style="margin-top: 15px; font-weight: bold;"></div>
+                <button id="nextQuizBtn" class="success" style="margin-top: 15px; display: none;" onclick="nextQuizQuestion()">Next Question</button>
+            </div>
+        </div>
+
+        <!-- GAMES PANEL -->
+        <div id="gamePanel" class="panel">
+            <h2>🎮 Interactive Study Games</h2>
+            <p>Challenge your brain with fast-paced educational games!</p>
+
+            <div class="game-card">
+                <h3>⚡ Speed Math Blitz</h3>
+                <p>Solve as many arithmetic problems as you can before the 30-second timer runs out!</p>
+                <div id="mathGameArea">
+                    <p><strong>Time Remaining:</strong> <span id="mathTimer" style="color: var(--danger); font-size: 1.2em;">30</span>s</p>
+                    <p><strong>Current Score:</strong> <span id="mathGameScore">0</span></p>
+                    <div id="mathGamePlayBox" style="display:none;">
+                        <h4 id="mathProblemDisplay" style="font-size: 1.4em; color: var(--primary);">5 + 3 = ?</h4>
+                        <input type="number" id="mathGameAnswerInput" placeholder="Enter answer..." style="max-width: 200px;">
+                        <button class="success" onclick="submitMathAnswer()">Submit</button>
+                    </div>
+                    <button class="success" id="startMathGameBtn" onclick="startMathGame()">Start Blitz Game</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- ADMIN PANEL -->
+        <div id="adminPanel" class="panel">
+            <h2>Admin Dashboard (maalim003)</h2>
+            <p>Cloud Control Panel: Upload items up to 30MB, manage permissions, and inspect registered cloud users.</p>
+
+            <div class="auth-card">
+                <h3>Upload New Resource to Cloud (Limit: 30MB)</h3>
+                <input type="text" id="uploadTitle" placeholder="Resource Title or Link URL">
+                <select id="uploadType">
+                    <option value="Note">Note / Document / PDF</option>
+                    <option value="Image">Image</option>
+                    <option value="Video">Video</option>
+                    <option value="Audio">Audio</option>
+                    <option value="Link">Web Link / App Link</option>
+                </select>
+                <textarea id="uploadTextContent" placeholder="Paste Note/Document text content or description here" rows="4"></textarea>
+                <input type="file" id="uploadFile">
+                <button onclick="adminUpload()">Upload to Cloud</button>
+            </div>
+
+            <h3>Manage Uploads & Permissions</h3>
+            <table id="adminFilesTable">
+                <tr>
+                    <th>Title</th>
+                    <th>Type</th>
+                    <th>Open & Read</th>
+                    <th>Download Permission</th>
+                    <th>Actions</th>
+                </tr>
+            </table>
+
+            <h3>Registered Accounts & Visit Log</h3>
+            <p><strong>Total Site Visits:</strong> <span id="visitCount">1</span></p>
+            <ul id="accountList"></ul>
+        </div>
+    </div>
+
+    <!-- MEDIA VIEWER MODAL -->
+    <div id="mediaModal">
+        <div class="modal-content">
+            <button class="danger" onclick="closeModal()" style="float: right; padding: 5px 10px;">Close X</button>
+            <h3 id="modalTitle" style="margin-top: 10px;">Resource Viewer</h3>
+            <div id="modalBody" style="margin-top: 15px; text-align: center;"></div>
+        </div>
+    </div>
+
+    <script>
+        const firebaseConfig = {
+            apiKey: "AIzaSyB77IErJJH-Y4sixxLFFEnuO21q6HjIp7w",
+            authDomain: "maalim-946b5.firebaseapp.com",
+            projectId: "maalim-946b5",
+            storageBucket: "maalim-946b5.firebasestorage.app",
+            messagingSenderId: "485463178885",
+            appId: "1:485463178885:web:714542425d3f2ffff2b3ec",
+            measurementId: "G-5X05PKDGCR"
+        };
+
+        // Initialize Firebase
+        firebase.initializeApp(firebaseConfig);
+        const db = firebase.firestore();
+        const storage = firebase.storage();
+
+        let resources = [];
+        let users = { "student1": "password123" };
+        let activeSession = JSON.parse(localStorage.getItem('active_session')) || null;
+
+        // Track Visits
+        let visits = localStorage.getItem('site_visits') || 1;
+        if(!sessionStorage.getItem('visited')) {
+            visits++;
+            localStorage.setItem('site_visits', visits);
+            sessionStorage.setItem('visited', 'true');
+        }
+        document.getElementById('visitCount').innerText = visits;
+
+        // Fetch Real-time Cloud Data from Firebase Firestore
+        function initCloudSync() {
+            db.collection("resources").onSnapshot((snapshot) => {
+                resources = [];
+                snapshot.forEach((doc) => {
+                    resources.push({ id: doc.id, ...doc.data() });
+                });
+                renderLists();
+            }, (error) => {
+                console.log("Firestore error, falling back to local storage:", error);
+                resources = JSON.parse(localStorage.getItem('site_resources')) || [];
+                renderLists();
+            });
+
+            db.collection("users").doc("accounts").onSnapshot((doc) => {
+                if (doc.exists) {
+                    users = doc.data();
+                }
+                renderLists();
+            }, (error) => {
+                users = JSON.parse(localStorage.getItem('site_users')) || { "student1": "password123" };
+                renderLists();
+            });
+        }
+
+        initCloudSync();
+        checkSession();
+
+        function togglePasswordVisibility(fieldId, btn) {
+            let passwordInput = document.getElementById(fieldId);
+            if (passwordInput.type === "password") {
+                passwordInput.type = "text";
+                btn.textContent = "🙈";
+            } else {
+                passwordInput.type = "password";
+                btn.textContent = "👁";
+            }
+        }
+
+        function switchPanel(panelId) {
+            document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
+            let target = document.getElementById(panelId);
+            if(target) {
+                target.classList.add('active');
+                if(panelId === 'quizPanel') {
+                    loadQuiz();
+                }
+            }
+        }
+
+        function registerUser() {
+            let u = document.getElementById('regUser').value.trim();
+            let p = document.getElementById('regPass').value.trim();
+
+            if(!u || !p) {
+                alert("Please fill in both username and password.");
+                return;
+            }
+            if(users[u] || u === "maalim003") {
+                alert("Username already exists. Choose another.");
+                return;
+            }
+
+            users[u] = p;
+            db.collection("users").doc("accounts").set(users).then(() => {
+                alert("Account registered to cloud successfully!");
+                document.getElementById('regUser').value = '';
+                document.getElementById('regPass').value = '';
+                renderLists();
+            }).catch(err => {
+                alert("Error registering user: " + err.message);
+            });
+        }
+
+        function login() {
+            let u = document.getElementById('loginUser').value.trim();
+            let p = document.getElementById('loginPass').value.trim();
+
+            if(u === "maalim003" && p === "14415") {
+                activeSession = { username: "maalim003", role: "admin" };
+                localStorage.setItem('active_session', JSON.stringify(activeSession));
+                alert("Welcome back, Admin!");
+                checkSession();
+                return;
+            }
+
+            if(users[u] && users[u] === p) {
+                activeSession = { username: u, role: "user" };
+                localStorage.setItem('active_session', JSON.stringify(activeSession));
+                alert("Login successful!");
+                checkSession();
+                return;
+            }
+
+            alert("Invalid username or password.");
+        }
+
+        function logout() {
+            activeSession = null;
+            localStorage.removeItem('active_session');
+            checkSession();
+        }
+
+        function checkSession() {
+            let statusDisplay = document.getElementById('currentUserDisplay');
+            let navUserBtn = document.getElementById('navUserBtn');
+            let navQuizBtn = document.getElementById('navQuizBtn');
+            let navGameBtn = document.getElementById('navGameBtn');
+            let navAdminBtn = document.getElementById('navAdminBtn');
+            let logoutBtn = document.getElementById('logoutBtn');
+
+            if(activeSession) {
+                logoutBtn.style.display = "inline-block";
+                navQuizBtn.style.display = "inline-block";
+                navGameBtn.style.display = "inline-block";
+                if(activeSession.role === "admin") {
+                    statusDisplay.innerText = "Logged in as: Admin (maalim003)";
+                    navUserBtn.style.display = "inline-block";
+                    navAdminBtn.style.display = "inline-block";
+                    switchPanel('adminPanel');
+                } else {
+                    statusDisplay.innerText = "Logged in as: " + activeSession.username;
+                    let welcomeEl = document.getElementById('welcomeName');
+                    if(welcomeEl) welcomeEl.innerText = activeSession.username;
+                    navUserBtn.style.display = "inline-block";
+                    navAdminBtn.style.display = "none";
+                    switchPanel('userPanel');
+                }
+            } else {
+                statusDisplay.innerText = "Status: Not Logged In";
+                navUserBtn.style.display = "none";
+                navQuizBtn.style.display = "none";
+                navGameBtn.style.display = "none";
+                navAdminBtn.style.display = "none";
+                logoutBtn.style.display = "none";
+                switchPanel('authPanel');
+            }
+            renderLists();
+        }
+
+        // --- QUIZ LOGIC ---
+        const quizData = {
+            math: [
+                {
+                    question: "What is the sine ratio in a right-angled triangle defined as?",
+                    options: ["Adjacent / Hypotenuse", "Opposite / Hypotenuse", "Opposite / Adjacent", "Hypotenuse / Opposite"],
+                    answer: 1
+                },
+                {
+                    question: "Solve for x: 3x + 6 = 21",
+                    options: ["x = 3", "x = 5", "x = 7", "x = 9"],
+                    answer: 1
+                },
+                {
+                    question: "What is the sum of angles in a triangle?",
+                    options: ["90°", "180°", "270°", "360°"],
+                    answer: 1
+                },
+                {
+                    question: "If tan(θ) = Opposite / Adjacent, what is tan(45°) in a standard isosceles right triangle?",
+                    options: ["0", "0.5", "1", "√2"],
+                    answer: 2
+                },
+                {
+                    question: "What is the area of a circle with radius r?",
+                    options: ["2πr", "πr²", "πd", "4πr²"],
+                    answer: 1
+                }
+            ],
+            computer: [
+                {
+                    question: "Which component is considered the 'brain' of the computer?",
+                    options: ["RAM", "Hard Disk Drive", "Central Processing Unit (CPU)", "Power Supply Unit"],
+                    answer: 2
+                },
+                {
+                    question: "According to the Von Neumann architecture, which unit executes arithmetic and logical operations?",
+                    options: ["Control Unit", "Arithmetic Logic Unit (ALU)", "Registers", "Cache Memory"],
+                    answer: 1
+                },
+                {
+                    question: "Which of the following is an example of secondary storage media?",
+                    options: ["RAM", "Cache", "SSD / Hard Disk", "Registers"],
+                    answer: 2
+                },
+                {
+                    question: "What is the primary function of an Operating System?",
+                    options: ["Browsing the internet", "Managing hardware and software resources", "Designing web pages", "Compiling high-level code"],
+                    answer: 1
+                },
+                {
+                    question: "Which bus carries data between the CPU, memory, and input/output devices?",
+                    options: ["Control Bus", "Address Bus", "Data Bus", "Power Bus"],
+                    answer: 2
+                }
+            ]
+        };
+
+        let currentQuizCategory = 'math';
+        let currentQuizIndex = 0;
+        let quizScore = 0;
+
+        function loadQuiz() {
+            currentQuizCategory = document.getElementById('quizCategorySelect').value;
+            currentQuizIndex = 0;
+            quizScore = 0;
+            renderQuizQuestion();
+        }
+
+        function renderQuizQuestion() {
+            let questions = quizData[currentQuizCategory];
+            let q = questions[currentQuizIndex];
+
+            document.getElementById('quizProgress').innerText = `Question ${currentQuizIndex + 1} of ${questions.length}`;
+            document.getElementById('quizScoreDisplay').innerText = `Score: ${quizScore}`;
+            document.getElementById('quizQuestionText').innerText = q.question;
+            document.getElementById('quizFeedback').innerText = '';
+            document.getElementById('nextQuizBtn').style.display = 'none';
+
+            let optionsHtml = '';
+            q.options.forEach((opt, idx) => {
+                optionsHtml += `<button class="option-btn" onclick="selectQuizOption(${idx})">${opt}</button>`;
+            });
+            document.getElementById('quizOptionsContainer').innerHTML = optionsHtml;
+        }
+
+        function selectQuizOption(selectedIndex) {
+            let questions = quizData[currentQuizCategory];
+            let q = questions[currentQuizIndex];
+            let optionButtons = document.querySelectorAll('.option-btn');
+
+            // Disable all options after selection
+            optionButtons.forEach(btn => btn.disabled = true);
+
+            if (selectedIndex === q.answer) {
+                optionButtons[selectedIndex].classList.add('correct');
+                document.getElementById('quizFeedback').innerHTML = `<span style="color: var(--success);">Correct! Great job.</span>`;
+                quizScore += 10;
+            } else {
+                optionButtons[selectedIndex].classList.add('incorrect');
+                optionButtons[q.answer].classList.add('correct');
+                document.getElementById('quizFeedback').innerHTML = `<span style="color: var(--danger);">Incorrect. The correct answer was highlighted in green.</span>`;
+            }
+
+            document.getElementById('quizScoreDisplay').innerText = `Score: ${quizScore}`;
+
+            if (currentQuizIndex < questions.length - 1) {
+                document.getElementById('nextQuizBtn').style.display = 'inline-block';
+            } else {
+                document.getElementById('quizFeedback').innerHTML += `<br><strong style="color: var(--primary);">Quiz Complete! Final Score: ${quizScore} points.</strong>`;
+            }
+        }
+
+        function nextQuizQuestion() {
+            currentQuizIndex++;
+            renderQuizQuestion();
+        }
+
+        // --- MATH GAME LOGIC ---
+        let mathTimerInterval = null;
+        let timeLeft = 30;
+        let mathGameScore = 0;
+        let currentCorrectAnswer = 0;
+
+        function startMathGame() {
+            timeLeft = 30;
+            mathGameScore = 0;
+            document.getElementById('mathGameScore').innerText = mathGameScore;
+            document.getElementById('mathTimer').innerText = timeLeft;
+            document.getElementById('startMathGameBtn').style.display = 'none';
+            document.getElementById('mathGamePlayBox').style.display = 'block';
+
+            generateMathProblem();
+
+            mathTimerInterval = setInterval(() => {
+                timeLeft--;
+                document.getElementById('mathTimer').innerText = timeLeft;
+                if (timeLeft <= 0) {
+                    clearInterval(mathTimerInterval);
+                    document.getElementById('mathGamePlayBox').style.display = 'none';
+                    document.getElementById('startMathGameBtn').style.display = 'inline-block';
+                    document.getElementById('startMathGameBtn').innerText = 'Play Again';
+                    alert(`Time's up! Your final score is: ${mathGameScore} points.`);
+                }
+            }, 1000);
+        }
+
+        function generateMathProblem() {
+            let num1 = Math.floor(Math.random() * 12) + 1;
+            let num2 = Math.floor(Math.random() * 12) + 1;
+            let ops = ['+', '-', '*'];
+            let op = ops[Math.floor(Math.random() * ops.length)];
+
+            if (op === '+') currentCorrectAnswer = num1 + num2;
+            else if (op === '-') {
+                if (num1 < num2) [num1, num2] = [num2, num1]; // Keep positive
+                currentCorrectAnswer = num1 - num2;
+            }
+            else if (op === '*') currentCorrectAnswer = num1 * num2;
+
+            document.getElementById('mathProblemDisplay').innerText = `${num1} ${op === '*' ? '×' : op} ${num2} = ?`;
+            let ansInput = document.getElementById('mathGameAnswerInput');
+            ansInput.value = '';
+            ansInput.focus();
+        }
+
+        function submitMathAnswer() {
+            let userAns = parseInt(document.getElementById('mathGameAnswerInput').value);
+            if (userAns === currentCorrectAnswer) {
+                mathGameScore += 5;
+                document.getElementById('mathGameScore').innerText = mathGameScore;
+            }
+            generateMathProblem();
+        }
+
+        // Support pressing 'Enter' in Math Game
+        document.addEventListener('keypress', function(e) {
+            if(e.key === 'Enter' && document.getElementById('mathGamePlayBox').style.display === 'block') {
+                submitMathAnswer();
+            }
+        });
+
+        function openResource(index) {
+            let res = resources[index];
+            let targetUrl = res.url || res.title;
+            let lowerUrl = targetUrl.toLowerCase();
+
+            if (
+                res.type === "Link" || 
+                lowerUrl.includes("youtube.com") || 
+                lowerUrl.includes("youtu.be") || 
+                lowerUrl.includes("facebook.com") || 
+                lowerUrl.includes("fb.com") || 
+                lowerUrl.includes("wa.me") || 
+                lowerUrl.includes("whatsapp.com") || 
+                lowerUrl.startsWith("http://") || 
+                lowerUrl.startsWith("https://")
+            ) {
+                window.open(targetUrl, '_blank');
+                return;
+            }
+
+            let modal = document.getElementById('mediaModal');
+            let modalTitle = document.getElementById('modalTitle');
+            let modalBody = document.getElementById('modalBody');
+
+            modalTitle.innerText = res.title + " (" + res.type + ")";
+            modalBody.innerHTML = "";
+
+            if (res.type === "Image") {
+                let img = document.createElement('img');
+                img.src = targetUrl;
+                modalBody.appendChild(img);
+            } else if (res.type === "Video") {
+                let video = document.createElement('video');
+                video.src = targetUrl;
+                video.controls = true;
+                video.autoplay = true;
+                modalBody.appendChild(video);
+            } else if (res.type === "Audio") {
+                let audio = document.createElement('audio');
+                audio.src = targetUrl;
+                audio.controls = true;
+                audio.autoplay = true;
+                modalBody.appendChild(audio);
+            } else {
+                let textDiv = document.createElement('div');
+                textDiv.style.textAlign = "left";
+                textDiv.style.padding = "15px";
+                textDiv.style.background = "#f9f9f9";
+                textDiv.style.border = "1px solid #ddd";
+                textDiv.style.borderRadius = "4px";
+                
+                let displayContent = res.contentText || targetUrl || "No text content available.";
+                textDiv.innerHTML = `<h4>Document / Note Content:</h4><p style="white-space: pre-wrap; line-height: 1.5;">${displayContent}</p>`;
+                modalBody.appendChild(textDiv);
+            }
+
+            modal.style.display = "flex";
+        }
+
+        function closeModal() {
+            document.getElementById('mediaModal').style.display = "none";
+            document.getElementById('modalBody').innerHTML = "";
+        }
+
+        function renderLists() {
+            let userTable = document.getElementById('userFilesTable');
+            if(userTable) {
+                userTable.innerHTML = `<tr><th>Title</th><th>Type</th><th>Uploaded By</th><th>Open & Read</th><th>Download Status</th></tr>`;
+                resources.forEach((res, index) => {
+                    let downloadAction = res.allowed 
+                        ? `<button class="success" onclick="window.open('${res.url || '#'}', '_blank')">Download</button>` 
+                        : `<span style="color: gray; font-style: italic;">Locked (Awaiting Admin Permission)</span>`;
+                    
+                    userTable.innerHTML += `<tr>
+                        <td>${res.title}</td>
+                        <td>${res.type}</td>
+                        <td>${res.author}</td>
+                        <td><button onclick="openResource(${index})">Open & Read</button></td>
+                        <td>${downloadAction}</td>
+                    </tr>`;
+                });
+            }
+
+            let adminTable = document.getElementById('adminFilesTable');
+            if(adminTable) {
+                adminTable.innerHTML = `<tr><th>Title</th><th>Type</th><th>Open & Read</th><th>Download Permission</th><th>Actions</th></tr>`;
+                resources.forEach((res, index) => {
+                    let toggleText = res.allowed ? "Revoke Download" : "Allow Download";
+                    let toggleClass = res.allowed ? "danger" : "success";
+                    adminTable.innerHTML += `<tr>
+                        <td>${res.title}</td>
+                        <td>${res.type}</td>
+                        <td><button onclick="openResource(${index})">Open & Read</button></td>
+                        <td>${res.allowed ? "Allowed to Download" : "Restricted"}</td>
+                        <td>
+                            <button class="${toggleClass}" onclick="togglePermission('${res.id}', ${res.allowed})">${toggleText}</button>
+                            <button class="danger" onclick="deleteResource('${res.id}')">Delete</button>
+                        </td>
+                    </tr>`;
+                });
+            }
+
+            let userListUl = document.getElementById('accountList');
+            if(userListUl) {
+                userListUl.innerHTML = "";
+                Object.keys(users).forEach(u => {
+                    userListUl.innerHTML += `<li>Registered Cloud User: ${u}</li>`;
+                });
+            }
+        }
+
+        function adminUpload() {
+            let title = document.getElementById('uploadTitle').value.trim();
+            let type = document.getElementById('uploadType').value;
+            let textContentInput = document.getElementById('uploadTextContent').value.trim();
+            let fileInput = document.getElementById('uploadFile');
+
+            if(!title && fileInput.files.length === 0) {
+                alert("Please provide a title or choose a file to upload.");
+                return;
+            }
+
+            if(fileInput.files.length > 0) {
+                let file = fileInput.files[0];
+                let fileSizeMB = file.size / (1024*1024);
+                if(fileSizeMB > 30) {
+                    alert("File size exceeds the 30MB limit!");
+                    return;
+                }
+
+                if(!title) {
+                    title = file.name;
+                }
+
+                alert("Uploading file to cloud storage, please wait...");
+                let storageRef = storage.ref('uploads/' + Date.now() + '_' + file.name);
+                storageRef.put(file).then(snapshot => {
+                    snapshot.ref.getDownloadURL().then(downloadURL => {
+                        saveResourceToCloud(title, type, downloadURL, textContentInput || file.name);
+                    });
+                }).catch(error => {
+                    let reader = new FileReader();
+                    reader.onload = function(e) {
+                        saveResourceToCloud(title, type, e.target.result, textContentInput || file.name);
+                    };
+                    reader.readAsDataURL(file);
+                });
+                return;
+            }
+
+            let fileUrl = title;
+            let contentText = textContentInput || "Uploaded study material content.";
+            saveResourceToCloud(title, type, fileUrl, contentText);
+        }
+
+        function saveResourceToCloud(title, type, fileUrl, contentText) {
+            db.collection("resources").add({
+                title: title,
+                type: type,
+                author: "maalim003",
+                allowed: false,
+                url: fileUrl,
+                contentText: contentText,
+                createdAt: firebase.firestore.FieldValue.serverTimestamp()
+            }).then(() => {
+                document.getElementById('uploadTitle').value = '';
+                document.getElementById('uploadTextContent').value = '';
+                document.getElementById('uploadFile').value = '';
+                alert("Resource successfully uploaded to cloud and synced across devices!");
+            }).catch(error => {
+                alert("Error saving to database: " + error.message);
+            });
+        }
+
+        function togglePermission(docId, currentStatus) {
+            db.collection("resources").doc(docId).update({
+                allowed: !currentStatus
+            }).catch(error => {
+                alert("Error updating permission: " + error.message);
+            });
+        }
+
+        function deleteResource(docId) {
+            if(confirm("Are you sure you want to delete this resource from the cloud?")) {
+                db.collection("resources").doc(docId).delete().catch(error => {
+                    alert("Error deleting resource: " + error.message);
+                });
+            }
+        }
+    </script>
+</body>
+</html>
