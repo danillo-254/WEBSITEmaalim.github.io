@@ -149,6 +149,58 @@
             border: 1px solid #ddd;
             border-radius: 8px;
             margin-bottom: 20px;
+            <!-- AI Quiz Generator Section -->
+<div class="max-w-4xl mx-auto my-8 p-6 bg-white rounded-xl shadow-md border border-gray-100">
+    <h2 class="text-2xl font-bold text-slate-800 mb-4">🤖 AI Smart Quiz Generator</h2>
+    <p class="text-slate-600 mb-6">Generate unlimited, adaptive quizzes tailored to any topic and difficulty level instantly.</p>
+    
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-4">
+        <!-- Topic Input -->
+        <div>
+            <label class="block text-sm font-medium text-slate-700 mb-1">Topic / Concept</label>
+            <input type="text" id="aiTopic" placeholder="e.g., Quadratic Equations, Von Neumann Model" class="w-full p-2 border rounded-lg focus:ring-2 focus:ring-blue-500 outline-none">
+        </div>
+        <!-- Difficulty Selection -->
+        <div>
+            <label class="block text-sm font-medium text-slate-700 mb-1">Learning Level</label>
+            <select id="aiLevel" class="w-full p-2 border rounded-lg focus:ring-2 focus:ring-blue-500 outline-none">
+                <option value="beginner">Beginner (Form 1/2)</option>
+                <option value="intermediate">Intermediate (Form 3)</option>
+                <option value="advanced">Advanced (Form 4 / Exam Prep)</option>
+            </select>
+        </div>
+        <!-- Generate Button -->
+        <div class="flex items-end">
+            <button onclick="generateAIQuiz()" class="w-full bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 px-4 rounded-lg transition">
+                Generate Quiz 🚀
+            </button>
+        </div>
+    </div>
+
+    <!-- Quiz Display Area -->
+    <div id="aiQuizContainer" class="mt-6 hidden">
+        <!-- Dynamic questions will appear here -->
+    </div>
+</div>
+
+<script>
+async function generateAIQuiz() {
+    const topic = document.getElementById('aiTopic').value;
+    const level = document.getElementById('aiLevel').value;
+    const container = document.getElementById('aiQuizContainer');
+    
+    if (!topic) {
+        alert("Please enter a topic first!");
+        return;
+    }
+
+    container.classList.remove('hidden');
+    container.innerHTML = `<div class="text-center py-6 text-blue-600 font-medium">Generating smart questions for ${topic} (${level})... Please wait.</div>`;
+
+    // Here you would integrate your API call endpoint safely or securely pass the prompt structure
+    // Example structure to fetch from an AI model endpoint returning JSON quiz arrays.
+}
+</script>
         }
         .option-btn {
             display: block;
