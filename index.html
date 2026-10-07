@@ -354,6 +354,264 @@ function checkAnswer(qIndex, selectedOpt, correctOpt, btnElement) {
             border: 1px solid #ddd;
             border-radius: 8px;
             margin-bottom: 20px;
+            <!-- AI Quiz Generator Section -->
+<div class="max-w-4xl mx-auto my-8 p-6 bg-white rounded-xl shadow-md border border-gray-100">
+    <h2 class="text-2xl font-bold text-slate-800 mb-4">🤖 AI Smart Quiz Generator</h2>
+    <p class="text-slate-600 mb-6">Generate unlimited, adaptive quizzes tailored to any topic and difficulty level instantly.</p>
+    
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-4">
+        <!-- Topic Input -->
+        <div>
+            <label class="block text-sm font-medium text-slate-700 mb-1">Topic / Concept</label>
+            <input type="text" id="aiTopic" placeholder="e.g., Quadratic Equations, Von Neumann Model" class="w-full p-2 border rounded-lg focus:ring-2 focus:ring-blue-500 outline-none">
+        </div>
+        <!-- Difficulty Selection -->
+        <div>
+            <label class="block text-sm font-medium text-slate-700 mb-1">Learning Level</label>
+            <select id="aiLevel" class="w-full p-2 border rounded-lg focus:ring-2 focus:ring-blue-500 outline-none">
+                <option value="beginner">Beginner (Form 1/2)</option>
+                <option value="intermediate">Intermediate (Form 3)</option>
+                <option value="advanced">Advanced (Form 4 / Exam Prep)</option>
+            </select>
+        </div>
+        <!-- Generate Button -->
+        <div class="flex items-end">
+            <button onclick="generateAIQuiz()" class="w-full bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 px-4 rounded-lg transition">
+                Generate Quiz 🚀
+            </button>
+        </div>
+    </div>
+
+    <!-- Quiz Display Area -->
+    <div id="aiQuizContainer" class="mt-6 hidden">
+        <!-- Dynamic questions will appear here -->
+    </div>
+</div>
+
+<script>
+async function generateAIQuiz() {
+    const topic = document.getElementById('aiTopic').value;
+    const level = document.getElementById('aiLevel').value;
+    const container = document.getElementById('aiQuizContainer');
+    
+    if (!topic) {
+        alert("Please enter a topic first!");
+        return;
+    }
+
+    container.classList.remove('hidden');
+    container.innerHTML = `<div class="text-center py-6 text-blue-600 font-medium">Generating smart questions for ${topic} (${level})... Please wait.</div>`;
+
+    // Here you would integrate your API call endpoint safely or securely pass the prompt structure
+    // Example structure to fetch from an AI model endpoint returning JSON quiz arrays.
+
+        <!-- ========================================== -->
+<!-- AI SMART QUIZ GENERATOR SECTION -->
+<!-- ========================================== -->
+<div class="max-w-4xl mx-auto my-8 p-6 bg-white rounded-2xl shadow-lg border border-slate-100">
+    <div class="flex flex-col md:flex-row justify-between items-start md:items-center mb-6 border-b pb-4">
+        <div>
+            <h2 class="text-2xl font-bold text-slate-800 flex items-center gap-2">
+                <span>🤖</span> AI Adaptive Study Quiz
+            </h2>
+            <p class="text-slate-600 text-sm mt-1">Generate unlimited, curriculum-aligned questions instantly for any math or computer science topic.</p>
+        </div>
+        <!-- API Key Configuration Toggle -->
+        <div class="mt-4 md:mt-0">
+            <button onclick="toggleApiKeyInput()" class="text-xs text-blue-600 hover:underline bg-blue-50 px-3 py-1.5 rounded-lg font-medium">
+                ⚙️ Configure Gemini API Key
+            </button>
+        </div>
+    </div>
+
+    <!-- Hidden API Key Box (Saved in localStorage) -->
+    <div id="apiKeyBox" class="hidden mb-6 p-4 bg-slate-50 rounded-xl border border-slate-200">
+        <label class="block text-xs font-semibold text-slate-700 mb-1">Enter your Gemini API Key (stored safely in your browser session):</label>
+        <div class="flex gap-2">
+            <input type="password" id="geminiApiKeyInput" placeholder="AIzaSy..." class="flex-1 p-2 text-sm border rounded-lg focus:ring-2 focus:ring-blue-500 outline-none">
+            <button onclick="saveApiKey()" class="bg-slate-800 text-white text-sm px-4 py-2 rounded-lg hover:bg-slate-900 transition">Save Key</button>
+        </div>
+    </div>
+
+    <!-- Quiz Controls Form -->
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
+        <div>
+            <label class="block text-sm font-medium text-slate-700 mb-1">Topic / Concept</label>
+            <input type="text" id="aiTopic" placeholder="e.g., Quadratic Equations, CPU Architecture" class="w-full p-2.5 text-sm border rounded-xl focus:ring-2 focus:ring-blue-500 outline-none">
+        </div>
+        <div>
+            <label class="block text-sm font-medium text-slate-700 mb-1">Learning Level</label>
+            <select id="aiLevel" class="w-full p-2.5 text-sm border rounded-xl focus:ring-2 focus:ring-blue-500 outline-none bg-white">
+                <option value="Beginner (Form 1/2 level)">Beginner (Fundamentals)</option>
+                <option value="Intermediate (Form 3 level)">Intermediate (Core Application)</option>
+                <option value="Advanced (Form 4 / Exam Prep)">Advanced (Exam Standard)</option>
+            </select>
+        </div>
+        <div class="flex items-end">
+            <button onclick="generateAIQuiz()" class="w-full bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2.5 px-4 rounded-xl shadow-md transition flex items-center justify-center gap-2">
+                <span>🚀</span> Generate Quiz
+            </button>
+        </div>
+    </div>
+
+    <!-- Quiz Loading & Display Area -->
+    <div id="aiQuizContainer" class="hidden mt-6">
+        <!-- Dynamic questions rendered via script -->
+    </div>
+</div>
+
+<!-- ========================================== -->
+<!-- AI QUIZ JAVASCRIPT LOGIC -->
+<!-- ========================================== -->
+<script>
+// Check if API key exists on load
+window.addEventListener('DOMContentLoaded', () => {
+    const savedKey = localStorage.getItem('gemini_user_api_key');
+    if (savedKey) {
+        document.getElementById('geminiApiKeyInput').value = savedKey;
+    }
+});
+
+function toggleApiKeyInput() {
+    const box = document.getElementById('apiKeyBox');
+    box.classList.toggle('hidden');
+}
+
+function saveApiKey() {
+    const key = document.getElementById('geminiApiKeyInput').value.trim();
+    if (key) {
+        localStorage.setItem('gemini_user_api_key', key);
+        alert('API Key saved securely in your browser!');
+        document.getElementById('apiKeyBox').classList.add('hidden');
+    } else {
+        alert('Please enter a valid API key.');
+    }
+}
+
+async function generateAIQuiz() {
+    const apiKey = localStorage.getItem('gemini_user_api_key') || document.getElementById('geminiApiKeyInput').value.trim();
+    const topic = document.getElementById('aiTopic').value.trim();
+    const level = document.getElementById('aiLevel').value;
+    const container = document.getElementById('aiQuizContainer');
+
+    if (!apiKey) {
+        document.getElementById('apiKeyBox').classList.remove('hidden');
+        alert('Please configure your Gemini API Key first!');
+        return;
+    }
+
+    if (!topic) {
+        alert('Please enter a topic or concept!');
+        return;
+    }
+
+    container.classList.remove('hidden');
+    container.innerHTML = `
+        <div class="flex flex-col items-center justify-center py-12">
+            <div class="animate-spin rounded-full h-10 w-10 border-b-2 border-blue-600 mb-4"></div>
+            <p class="text-slate-600 font-medium">Crafting custom ${level} questions for "${topic}"...</p>
+        </div>
+    `;
+
+    const prompt = `Generate a 5-question multiple choice quiz about "${topic}" suitable for a ${level} student. 
+    You MUST return ONLY a valid JSON object with no markdown backticks or extra text, formatted precisely as follows:
+    {
+      "quizTitle": "Short catchy title based on ${topic}",
+      "questions": [
+        {
+          "question": "The question text here?",
+          "options": ["Option A", "Option B", "Option C", "Option D"],
+          "correctIndex": 0,
+          "explanation": "Brief explanation of why the answer is correct."
+        }
+      ]
+    }`;
+
+    try {
+        const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${apiKey}`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+                contents: [{ parts: [{ text: prompt }] }]
+            })
+        });
+
+        if (!response.ok) throw new Error('Failed to connect to AI service. Check your API key.');
+
+        const data = await response.json();
+        let rawText = data.candidates[0].content.parts[0].text;
+        
+        // Clean up markdown formatting if the model wraps it in json codeblocks
+        rawText = rawText.replace(/```json/g, '').replace(/```/g, '').trim();
+        
+        const quizData = JSON.parse(rawText);
+        renderQuiz(quizData);
+
+    } catch (error) {
+        console.error(error);
+        container.innerHTML = `
+            <div class="p-4 bg-red-50 text-red-700 rounded-xl border border-red-200">
+                <strong>Error generating quiz:</strong> ${error.message}. Please check your API key and try again.
+            </div>
+        `;
+    }
+}
+
+function renderQuiz(quiz) {
+    const container = document.getElementById('aiQuizContainer');
+    let html = `<h3 class="text-xl font-bold text-slate-800 mb-4">${quiz.quizTitle}</h3>`;
+    
+    quiz.questions.forEach((q, qIndex) => {
+        html += `
+            <div class="mb-6 p-5 bg-slate-50 rounded-xl border border-slate-200" id="question-card-${qIndex}">
+                <p class="font-semibold text-slate-800 mb-3">Q${qIndex + 1}. ${q.question}</p>
+                <div class="space-y-2">
+        `;
+        
+        q.options.forEach((opt, optIndex) => {
+            html += `
+                <button onclick="checkAnswer(${qIndex}, ${optIndex}, ${q.correctIndex}, this)" 
+                    class="w-full text-left p-3 text-sm rounded-lg bg-white border border-slate-200 hover:bg-blue-50 hover:border-blue-300 transition option-btn-${qIndex}">
+                    ${opt}
+                </button>
+            `;
+        });
+
+        html += `
+                </div>
+                <div id="explanation-${qIndex}" class="hidden mt-3 p-3 text-xs rounded-lg bg-blue-50 text-blue-900 border border-blue-100">
+                    <strong>Explanation:</strong> ${q.explanation}
+                </div>
+            </div>
+        `;
+    });
+
+    container.innerHTML = html;
+}
+
+function checkAnswer(qIndex, selectedOpt, correctOpt, btnElement) {
+    const parentContainer = btnElement.parentElement;
+    const buttons = parentContainer.querySelectorAll('button');
+    
+    // Disable all option buttons for this question once answered
+    buttons.forEach((btn, idx) => {
+        btn.disabled = true;
+        if (idx === correctOpt) {
+            btn.classList.add('bg-green-100', 'border-green-500', 'text-green-800', 'font-medium');
+        } else if (idx === selectedOpt) {
+            btn.classList.add('bg-red-100', 'border-red-500', 'text-red-800');
+        } else {
+            btn.classList.add('opacity-50');
+        }
+    });
+
+    // Show explanation box
+    const expBox = document.getElementById(`explanation-${qIndex}`);
+    expBox.classList.remove('hidden');
+}
+</script>
+}
+</script>
         }
         .option-btn {
             display: block;
